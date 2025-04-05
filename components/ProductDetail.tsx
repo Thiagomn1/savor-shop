@@ -1,13 +1,31 @@
+"use client";
+
 import Image from "next/image";
 import Stripe from "stripe";
 import { Button } from "./ui/button";
+import { useCartStore } from "@/store/cart-store";
 
 interface Props {
   product: Stripe.Product;
 }
 
 export const ProductDetail = ({ product }: Props) => {
+  const { items, addItem, removeItem } = useCartStore();
+
+  const cartItem = items.find((i) => i.id === product.id);
+
+  const quantity = cartItem ? cartItem.quantity : 0;
   const price = product.default_price as Stripe.Price;
+
+  const onAddItem = () => {
+    addItem({
+      id: product.id,
+      name: product.name || "",
+      imageUrl: product.images?.[0] || null,
+      price: price.unit_amount as number,
+      quantity: 1,
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 items-center">
@@ -30,16 +48,24 @@ export const ProductDetail = ({ product }: Props) => {
         )}
         {price && price.unit_amount && (
           <p className="text-lg font-semibold text-gray-900">
-            ${(price.unit_amount / 100).toFixed(2)}
+            R${(price.unit_amount / 100).toFixed(2)}
           </p>
         )}
 
         <div className="flex items-center space-x-4">
-          <Button className="cursor-pointer" variant="outline">
+          <Button
+            onClick={() => removeItem(product.id)}
+            className="cursor-pointer"
+            variant="outline"
+          >
             -
           </Button>
-          <span className="text-lg font-semibold">0</span>
-          <Button className="cursor-pointer" variant="outline">
+          <span className="text-lg font-semibold">{quantity}</span>
+          <Button
+            onClick={onAddItem}
+            className="cursor-pointer"
+            variant="outline"
+          >
             +
           </Button>
         </div>

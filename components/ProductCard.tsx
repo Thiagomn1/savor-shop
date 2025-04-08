@@ -30,7 +30,10 @@ export const ProductCard = ({ product }: Props) => {
           <CardTitle className="text-xl font-bold text-gray-800">
             {product.name}
           </CardTitle>
-          <CardContent className="p-4 flex-grow flex flex-col justify-between">
+        </CardHeader>
+
+        <CardContent className="flex flex-col justify-between flex-1 p-4">
+          <div>
             {product.description && (
               <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                 {product.description}
@@ -41,12 +44,12 @@ export const ProductCard = ({ product }: Props) => {
                 ${(price.unit_amount / 100).toFixed(2)}
               </p>
             )}
+          </div>
 
-            <Button className="mt-4 bg-black text-white cursor-pointer">
-              View Details
-            </Button>
-          </CardContent>
-        </CardHeader>
+          <Button className="mt-4 bg-black text-white cursor-pointer">
+            View Details
+          </Button>
+        </CardContent>
       </Card>
     </Link>
   );
